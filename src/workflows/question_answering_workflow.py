@@ -19,6 +19,6 @@ def answer_question(document_id: str, question: str)-> str:
 
     prompt = build_document_prompt(relevant_chunks, question)
 
-    # answer = ask_llm(prompt)
+    answer = ask_llm(prompt)
 
-    return prompt
+    return answer
