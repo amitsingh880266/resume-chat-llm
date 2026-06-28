@@ -8,6 +8,8 @@ class Settings:
     def __init__(self):
         self.api_key = self._get_required("OPENAI_API_KEY")
         self.model = os.getenv("OPENAI_MODEL", "gpt-5.5")
+        self.can_call_openai = os.getenv("SEND_TO_OPENAI", "false").lower() == "true"
+        self.embedding_model = os.getenv("embedding_model", "all-MiniLM-L6-v2")
 
     @staticmethod
     def _get_required(key: str) -> str:
