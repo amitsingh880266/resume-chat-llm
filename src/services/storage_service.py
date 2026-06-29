@@ -3,6 +3,9 @@ import json
 from dataclasses import asdict
 from pathlib import Path
 
+def _get_document_path(document_id: str) -> Path:
+    return Path("storage") / f"{document_id}.json"
+
 def save_chunks(document_id:str, chunks: list[Chunk])-> None:
     if not document_id.strip():
         raise ValueError("Document ID cannot be empty.")
@@ -13,7 +16,7 @@ def save_chunks(document_id:str, chunks: list[Chunk])-> None:
     storage_directory = Path("storage")
     storage_directory.mkdir(exist_ok=True)
 
-    chunk_file_path = storage_directory / f"{document_id}.json"
+    chunk_file_path = _get_document_path(document_id)
 
     chunk_list = []
 
@@ -27,7 +30,7 @@ def load_chunks(document_id: str)->list[Chunk]:
     if not document_id.strip():
         raise ValueError("Document ID cannot be empty.")
 
-    document_path = Path("storage") / f"{document_id}.json"
+    document_path = _get_document_path(document_id)
 
     if not document_path.is_file():
         raise FileNotFoundError("Index file does not exist")
@@ -42,5 +45,12 @@ def load_chunks(document_id: str)->list[Chunk]:
         chunk_list.append(Chunk(**chunk_dict))
     
     return chunk_list
-        
+
+def document_exists(document_id: str) -> bool:
+    if not document_id.strip():
+        raise ValueError("Document ID cannot empty")
+
+    document_path = _get_document_path(document_id)
+
+    return document_path.is_file()        
 
