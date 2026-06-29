@@ -3,7 +3,9 @@ import argparse
 
 from workflows.indexing_workflow import index_document
 from workflows.question_answering_workflow import answer_question
+from services.storage_service import document_exists
 
+document_id = "amit_resume"
 
 def main():
     parser = argparse.ArgumentParser()
@@ -16,12 +18,15 @@ def main():
 
     args = parser.parse_args()
 
-    document_id = "amit_resume"
+    if not document_exists(document_id):
+        print("Index not found. Indexing document...")
 
-    index_document(
-        document_id=document_id,
-        document_path=Path("resumes/resume.pdf"),
-    )
+        index_document(
+            document_id=document_id,
+            document_path=Path("resumes/resume.pdf"),
+        )
+    else:
+        print("Using existing document index.")
 
     answer = answer_question(
         document_id=document_id,
