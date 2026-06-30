@@ -3,7 +3,7 @@ import argparse
 
 from workflows.indexing_workflow import index_document
 from workflows.question_answering_workflow import answer_question
-from services.storage_service import document_exists
+from services.chroma_service import document_exists
 
 document_id = "amit_resume"
 
