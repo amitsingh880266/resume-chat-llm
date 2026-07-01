@@ -4,7 +4,7 @@ from models.chunk import Chunk
 from services.chunk_service import split_into_chunks
 from services.embedding_service import generate_embedding
 from services.pdf_service import read_pdf
-from services.storage_service import save_chunks
+from services.chroma_service import add_chunks
 
 
 def index_document(
@@ -30,7 +30,7 @@ def index_document(
             )
         )
 
-    save_chunks(
+    add_chunks(
         document_id=document_id,
         chunks=chunks,
     )
