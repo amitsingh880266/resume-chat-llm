@@ -1,4 +1,4 @@
-from models.chunk import Chunk
+from src.models.chunk import Chunk
 
 def build_document_prompt (chunks: list[Chunk], question: str) -> str:
     if not chunks:
@@ -10,7 +10,7 @@ def build_document_prompt (chunks: list[Chunk], question: str) -> str:
 
     return f"""
     Answer using ONLY the context.
-    Reply with one word.
+    Reply with words.
 
     Context:
     {context}

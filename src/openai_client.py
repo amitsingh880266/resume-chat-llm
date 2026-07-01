@@ -1,6 +1,6 @@
 from openai import OpenAI
 
-from config import settings
+from src.config import settings
 
 
 def get_openai_client() -> OpenAI:

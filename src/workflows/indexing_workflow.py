@@ -1,18 +1,21 @@
 from pathlib import Path
+from uuid import uuid4
 
-from models.chunk import Chunk
-from services.chunk_service import split_into_chunks
-from services.embedding_service import generate_embedding
-from services.pdf_service import read_pdf
-from services.chroma_service import add_chunks
+from src.models.chunk import Chunk
+from src.services.chunk_service import split_into_chunks
+from src.services.embedding_service import generate_embedding
+from src.services.pdf_service import read_pdf
+from src.services.chroma_service import add_chunks
 
 
 def index_document(
-    document_id: str,
     document_path: Path,
-) -> None:
-    if not document_id.strip():
-        raise ValueError("Document ID cannot be empty.")
+) -> str:
+    
+    if not document_path.is_file():
+        raise FileNotFoundError(f"Document not found: {document_path}")
+    
+    document_id = str(uuid4())
 
     document_text = read_pdf(document_path)
 
@@ -20,12 +23,12 @@ def index_document(
 
     chunks: list[Chunk] = []
 
-    for chunk in chunk_texts:
-        embedding = generate_embedding(chunk)
+    for chunk_text in chunk_texts:
+        embedding = generate_embedding(chunk_text)
 
         chunks.append(
             Chunk(
-                text=chunk,
+                text=chunk_text,
                 embedding=embedding,
             )
         )
@@ -34,3 +37,5 @@ def index_document(
         document_id=document_id,
         chunks=chunks,
     )
+
+    return document_id

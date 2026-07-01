@@ -22,7 +22,6 @@ def main():
         print("Index not found. Indexing document...")
 
         index_document(
-            document_id=document_id,
             document_path=Path("resumes/resume.pdf"),
         )
     else:

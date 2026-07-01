@@ -2,7 +2,7 @@ from pathlib import Path
 # test commit
 import chromadb
 
-from models.chunk import Chunk
+from src.models.chunk import Chunk
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
