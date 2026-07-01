@@ -1,5 +1,5 @@
 from sentence_transformers import SentenceTransformer
-from config import settings
+from src.config import settings
 
 _model = SentenceTransformer(settings.embedding_model)
 

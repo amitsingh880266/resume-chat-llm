@@ -1,7 +1,7 @@
-from services.embedding_service import generate_embedding
-from services.prompt_service import build_document_prompt
-from services.chroma_service import query_chunks
-from services.llm_service import ask_llm
+from src.services.embedding_service import generate_embedding
+from src.services.prompt_service import build_document_prompt
+from src.services.chroma_service import query_chunks
+from src.services.llm_service import ask_llm
 
 def answer_question(document_id: str, question: str)-> str:
     if not document_id.strip():

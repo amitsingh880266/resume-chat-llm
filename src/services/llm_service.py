@@ -1,5 +1,5 @@
-from openai_client import get_openai_client
-from config import settings
+from src.openai_client import get_openai_client
+from src.config import settings
 
 def ask_llm(prompt: str) -> str:
 
