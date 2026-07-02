@@ -11,5 +11,5 @@ router = APIRouter(
 
 @router.post("")
 def ask_question(request: QuestionRequest) -> QuestionResponse:
-    answer =  answer_question(request.document_id, request.question)
-    return QuestionResponse(answer=answer)
+    response =  answer_question(request.document_id, request.question)
+    return QuestionResponse(answer=response.answer, sources=response.sources)

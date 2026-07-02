@@ -1,9 +1,10 @@
+from src.api.schemas.question_response import QuestionResponse
 from src.services.embedding_service import generate_embedding
 from src.services.prompt_service import build_document_prompt
 from src.services.chroma_service import query_chunks
 from src.services.llm_service import ask_llm
 
-def answer_question(document_id: str, question: str)-> str:
+def answer_question(document_id: str, question: str)-> QuestionResponse:
     if not document_id.strip():
         raise ValueError("Document ID cannot be empty.")
 
@@ -15,6 +16,9 @@ def answer_question(document_id: str, question: str)-> str:
     relevant_chunks = query_chunks(document_id, question_embedding)
     prompt = build_document_prompt(relevant_chunks, question)
 
-    # answer = ask_llm(prompt)
+    answer = ask_llm(prompt)
 
-    return prompt
+    return QuestionResponse(
+        answer=answer,
+        sources=[f"Context {index}: {chunk.text}" for index, chunk in enumerate(relevant_chunks, start=1)]
+    )
