@@ -6,7 +6,9 @@ from src.services.chunk_service import split_into_chunks
 from src.services.embedding_service import generate_embedding
 from src.services.pdf_service import read_pdf
 from src.services.chroma_service import add_chunks
-
+from src.repositories.document_repository import save
+from src.models.document import Document, DocumentStatus
+from datetime import UTC, datetime
 
 def index_document(
     document_path: Path,
@@ -37,5 +39,13 @@ def index_document(
         document_id=document_id,
         chunks=chunks,
     )
+
+    save(Document(
+        document_id=document_id,
+        filename=document_path.name,
+        uploaded_at=datetime.now(UTC),
+        status= DocumentStatus.READY,
+        chunk_count=len(chunk_texts),
+    ))
 
     return document_id

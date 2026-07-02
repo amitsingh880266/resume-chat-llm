@@ -1,3 +1,4 @@
+from pathlib import Path
 from dotenv import load_dotenv
 import os
 
@@ -9,7 +10,8 @@ class Settings:
         self.api_key = self._get_required("OPENAI_API_KEY")
         self.model = os.getenv("OPENAI_MODEL", "gpt-5.5")
         self.can_call_openai = os.getenv("SEND_TO_OPENAI", "false").lower() == "true"
-        self.embedding_model = os.getenv("embedding_model", "all-MiniLM-L6-v2")
+        self.embedding_model = os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2")
+        self.database_path = Path("storage") / "documents.db"
 
     @staticmethod
     def _get_required(key: str) -> str:

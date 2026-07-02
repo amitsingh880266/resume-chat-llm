@@ -15,6 +15,6 @@ def answer_question(document_id: str, question: str)-> str:
     relevant_chunks = query_chunks(document_id, question_embedding)
     prompt = build_document_prompt(relevant_chunks, question)
 
-    answer = ask_llm(prompt)
+    # answer = ask_llm(prompt)
 
-    return answer
+    return prompt
