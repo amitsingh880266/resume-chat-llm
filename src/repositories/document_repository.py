@@ -26,8 +26,26 @@ def save(document: Document) -> None:
         )
 
 def get(document_id: str) -> Document | None:
-    # Implement the logic to retrieve the document from the database
-    pass
+    with get_connection() as connection:
+        cursor = connection.execute(
+            """
+            SELECT document_id, filename, uploaded_at, status, chunk_count
+            FROM documents
+            WHERE document_id = ?
+            """,
+            (document_id,),
+        )
+        row = cursor.fetchone()
+        if row:
+            return Document(
+                document_id=row[0],
+                filename=row[1],
+                uploaded_at=datetime.fromisoformat(row[2]),
+                status=DocumentStatus(row[3]),
+                chunk_count=row[4],
+            )
+        return None
+
 
 def list_documents() -> list[Document]:
    with get_connection() as connection:
@@ -52,5 +70,17 @@ def list_documents() -> list[Document]:
         return documents
 
 def delete(document_id: str) -> None:
-    # Implement the logic to delete the document from the database
-    pass
+    document = get(document_id)
+    if not document:
+        raise ValueError(f"Document with ID {document_id} does not exist.")
+    
+    with get_connection() as connection:
+        connection.execute(
+            """
+            DELETE FROM documents
+            WHERE document_id = ?
+            """,
+            (document_id,),
+        )
+
+    
