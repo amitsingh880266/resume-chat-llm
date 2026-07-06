@@ -1,33 +1,61 @@
+import time
+import nltk
+from nltk.tokenize import sent_tokenize
+
+from src.utils.logger import logger
+
+nltk.download("punkt", quiet=True)
+
+
 def split_into_chunks(
     text: str,
     chunk_size: int = 500,
-    overlap: int = 100,
 ) -> list[str]:
-    if not text.strip():
-        raise ValueError("Text cannot be empty.")
+    start = time.perf_counter()
 
-    if chunk_size <= 0:
-        raise ValueError("chunk_size must be greater than 0.")
+    try:
+        if not text.strip():
+            raise ValueError("Text cannot be empty.")
 
-    if overlap < 0:
-        raise ValueError("overlap cannot be negative.")
+        if chunk_size <= 0:
+            raise ValueError("chunk_size must be greater than 0.")
 
-    if overlap >= chunk_size:
-        raise ValueError("overlap must be smaller than chunk_size.")
+        sentences = sent_tokenize(text)
 
-    chunks: list[str] = []
+        chunks: list[str] = []
 
-    start = 0
-    text_length = len(text)
+        current_chunk: list[str] = []
+        current_size = 0
 
-    while start < text_length:
-        end = min(start + chunk_size, text_length)
+        for sentence in sentences:
+            sentence_size = len(sentence)
 
-        chunk = text[start:end].strip()
+            # If the sentence fits, add it to the current chunk
+            if current_size + sentence_size <= chunk_size:
+                current_chunk.append(sentence)
+                current_size += sentence_size
+            else:
+                # Save the completed chunk
+                if current_chunk:
+                    chunks.append(" ".join(current_chunk))
 
-        if chunk:
-            chunks.append(chunk)
+                # Start a new chunk with the current sentence
+                current_chunk = [sentence]
+                current_size = sentence_size
 
-        start += chunk_size - overlap
+        # Save the last chunk
+        if current_chunk:
+            chunks.append(" ".join(current_chunk))
 
-    return chunks
+        elapsed_ms = (time.perf_counter() - start) * 1000
+        logger.info(
+            "split_into_chunks: produced %d chunks from %d sentences in %.2f ms",
+            len(chunks),
+            len(sentences),
+            elapsed_ms,
+        )
+
+        return chunks
+    except Exception:
+        logger.exception("split_into_chunks: failed to split text into chunks")
+        raise
